@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/* ZAOmemberz design tokens — dark, bold, event-ready.
+   These are deliberately restrained: one accent, a warm signal color, and a
+   neutral ramp. Every surface is dark by default. */
+@theme {
+  --color-ink-950: #06070a;
+  --color-ink-900: #0a0c12;
+  --color-ink-850: #0f121a;
+  --color-ink-800: #141824;
+  --color-ink-700: #1d2333;
+  --color-ink-600: #2a3145;
+  --color-ink-500: #3a4258;
+
+  --color-mist-400: #8b93a7;
+  --color-mist-300: #aab2c5;
+  --color-mist-200: #cfd5e2;
+  --color-mist-100: #e9ecf3;
+
+  --color-accent-400: #7c8cff;
+  --color-accent-500: #5b6dff;
+  --color-accent-600: #4453e6;
+
+  --color-signal-400: #4ee6b8;
+  --color-signal-500: #22d3a0;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: var(--color-ink-950);
+  color: var(--color-mist-100);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle top-lit radial to give the near-black page some depth. */
+body {
+  min-height: 100dvh;
+  background-image:
+    radial-gradient(
+      1200px 600px at 50% -10%,
+      rgba(91, 109, 255, 0.12),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at 90% 10%,
+      rgba(34, 211, 160, 0.06),
+      transparent 55%
+    );
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(91, 109, 255, 0.35);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Thin, quiet scrollbars that match the dark shell. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a3145 transparent;
+}
