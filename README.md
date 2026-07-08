@@ -106,12 +106,27 @@ made-up address can ever reach the database.
 # 2. npm run db:seed
 ```
 
+## Consuming this service from other apps
+
+Other ZAO apps read profiles over the public API — never the database. A
+zero-dependency drop-in client lives in [`sdk/`](./sdk):
+
+```ts
+import { createZaomemberzClient } from "./zaomemberz-client";
+const zm = createZaomemberzClient("https://memberz.thezao.com");
+const profile = await zm.getProfileByWallet("0xabc…"); // or by fid / discord
+```
+
+See [`sdk/README.md`](./sdk/README.md) for the full API and a Next.js example.
+
 ## Deploy (Vercel)
 
-Set the same environment variables in the Vercel project, point `DATABASE_URL`
-at your Neon pooled connection string, and set `NEXT_PUBLIC_AUTH_DOMAIN` /
-`NEXT_PUBLIC_AUTH_URL` to the production domain (they gate SIWE/SIWF phishing
-protection). Run `npm run db:migrate` against production once.
+Full runbook in [`DEPLOYMENT.md`](./DEPLOYMENT.md). In short: set the env vars in
+Vercel, point `DATABASE_URL` at your Neon pooled connection string, set
+`NEXT_PUBLIC_AUTH_DOMAIN` / `NEXT_PUBLIC_AUTH_URL` to the production domain (they
+gate SIWE/SIWF phishing protection), and apply migrations (the
+[`migrate.yml`](./.github/workflows/migrate.yml) Action does this automatically
+on schema changes).
 
 > **Before announcing it's live:** confirm the real profile info for Zaal and
 > Sam has been reviewed. Do not ship fabricated bios or stats.
