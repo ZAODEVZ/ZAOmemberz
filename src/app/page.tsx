@@ -1,5 +1,5 @@
 import { SiteHeader } from "@/components/SiteHeader";
-import { MemberCard } from "@/components/MemberCard";
+import { DirectoryGrid } from "@/components/DirectoryGrid";
 import { safeDirectory } from "@/lib/safe-data";
 import {
   RESPECT_HOLDERS,
@@ -66,28 +66,7 @@ export default async function HomePage() {
 
       {/* ── Directory ────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-5 pb-24 pt-8">
-        <div className="mb-6 flex items-baseline justify-between">
-          <h2 className="text-xl font-bold tracking-tight">Members</h2>
-          <span className="text-sm text-mist-400">
-            {profiles.length} listed
-          </span>
-        </div>
-
-        {profiles.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-ink-850/40 px-6 py-16 text-center">
-            <p className="text-mist-200">No profiles yet.</p>
-            <p className="mt-1 text-sm text-mist-400">
-              Members will appear here as they join. Nothing is fabricated —
-              this list reflects real, seeded profiles only.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {profiles.map((p) => (
-              <MemberCard key={p.walletAddress} p={p} />
-            ))}
-          </div>
-        )}
+        <DirectoryGrid profiles={profiles} />
       </section>
 
       <SiteFooter />

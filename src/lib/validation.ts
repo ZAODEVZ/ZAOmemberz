@@ -4,8 +4,30 @@ import { isAddress } from "viem";
 /** A checksum-agnostic 0x address, normalized to lowercase. */
 export const walletSchema = z
   .string()
-  .refine((v) => isAddress(v), { message: "Invalid EVM address" })
+  // strict:false — accept any casing (lowercase, checksummed, or mixed);
+  // consumers shouldn't have to EIP-55-checksum before calling us. We
+  // normalize to lowercase ourselves below.
+  .refine((v) => isAddress(v, { strict: false }), {
+    message: "Invalid EVM address",
+  })
   .transform((v) => v.toLowerCase());
+
+/** An http(s) URL. Rejects javascript:/data:/etc. so links/avatars are safe. */
+const httpUrlSchema = z
+  .string()
+  .trim()
+  .max(600)
+  .refine(
+    (v) => {
+      try {
+        const u = new URL(v);
+        return u.protocol === "https:" || u.protocol === "http:";
+      } catch {
+        return false;
+      }
+    },
+    { message: "Must be an http(s) URL" },
+  );
 
 export const socialLinkSchema = z.object({
   platform: z.string().trim().min(1).max(40),
@@ -15,7 +37,7 @@ export const socialLinkSchema = z.object({
 /** Fields a profile owner (or admin) may set/update. */
 export const profileWritableSchema = z.object({
   displayName: z.string().trim().max(80).nullish(),
-  avatarUrl: z.string().trim().url().max(600).nullish().or(z.literal("")),
+  avatarUrl: httpUrlSchema.nullish().or(z.literal("")),
   bio: z.string().trim().max(1000).nullish(),
   discordId: z.string().trim().max(40).nullish(),
   farcasterFid: z.number().int().positive().nullish(),

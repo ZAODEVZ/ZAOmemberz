@@ -2,21 +2,13 @@ import "server-only";
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import { sessionSecret } from "@/lib/env";
+import type { Session } from "./session-types";
+
+export type { Session };
 
 const COOKIE_NAME = "zaomz_session";
 const NONCE_COOKIE = "zaomz_nonce";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
-
-/**
- * An authenticated end-user session. Anchored to a wallet address; if the user
- * signed in with Farcaster we also carry their FID. `method` records how they
- * proved control so we can display it and reason about it.
- */
-export interface Session {
-  wallet: string; // lowercased 0x-address — the anchor
-  fid?: number; // present iff signed in with Farcaster
-  method: "siwe" | "siwf";
-}
 
 /** Issue a signed session cookie. */
 export async function createSession(session: Session): Promise<void> {
