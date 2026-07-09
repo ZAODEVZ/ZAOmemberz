@@ -1,0 +1,28 @@
+name: Migrate database
+
+# Applies committed Drizzle migrations to the Neon database. Runs on pushes to
+# main that touch the schema or migration files, and can be triggered manually.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "drizzle/**"
+      - "src/db/schema.ts"
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    # Requires a DATABASE_URL secret pointing at the target Neon database.
+    # Configure per-environment in repo settings → Secrets → Actions.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply migrations
+        run: npm run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
